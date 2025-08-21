@@ -6,26 +6,33 @@ import lombok.Setter;
 
 import java.util.List;
 
+
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "pessoa")
 public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String documento;
+
+    @Column(nullable = false)
     private String nome;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "score_id")
+    @Enumerated(EnumType.STRING)
+    private TipoPessoa tipo;
+
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private Score score;
 
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Restricao> restricoes;
 
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Divida> dividas;
 
 }
