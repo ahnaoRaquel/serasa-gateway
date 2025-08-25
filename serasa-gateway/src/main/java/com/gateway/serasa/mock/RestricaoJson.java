@@ -10,6 +10,10 @@ import lombok.Setter;
 public class RestricaoJson {
 
     private String descricao;
+
     private String dataInclusao;
 
+    private String dataExclusao;
+
+    private boolean emAberto;
 }

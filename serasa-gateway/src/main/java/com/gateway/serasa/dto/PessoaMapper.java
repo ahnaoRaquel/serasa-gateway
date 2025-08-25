@@ -23,20 +23,22 @@ public class PessoaMapper {
 
         List<RestricaoDTO> restricoesDTO = pessoa.getRestricoes().stream()
                 .map(r -> {
-                    RestricaoDTO rdto = new RestricaoDTO();
-                    rdto.setDescricao(r.getDescricao());
-                    rdto.setDataInclusao(r.getDataInclusao());
-                    return rdto;
+                    RestricaoDTO restricao = new RestricaoDTO();
+                    restricao.setDescricao(r.getDescricao());
+                    restricao.setDataInclusao(r.getDataInclusao());
+                    restricao.setDataExclusao(r.getDataExclusao());
+                    restricao.setEmAberto(r.isEmAberto());
+                    return restricao;
                 }).collect(Collectors.toList());
         dto.setRestricoes(restricoesDTO);
 
         List<DividaDTO> dividasDTO = pessoa.getDividas().stream()
                 .map(d -> {
-                    DividaDTO ddto = new DividaDTO();
-                    ddto.setCredor(d.getCredor());
-                    ddto.setValor(d.getValor());
-                    ddto.setEmAberto(d.isEmAberto());
-                    return ddto;
+                    DividaDTO divida = new DividaDTO();
+                    divida.setCredor(d.getCredor());
+                    divida.setValor(d.getValor());
+                    divida.setEmAberto(d.isEmAberto());
+                    return divida;
                 }).collect(Collectors.toList());
         dto.setDividas(dividasDTO);
 

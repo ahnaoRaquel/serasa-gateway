@@ -20,6 +20,10 @@ public class Restricao {
 
     private LocalDate dataInclusao;
 
+    private LocalDate dataExclusao;
+
+    private boolean emAberto;
+
     @ManyToOne
     @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;

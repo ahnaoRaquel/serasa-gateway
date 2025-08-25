@@ -28,9 +28,9 @@ public class MockService {
                     new TypeReference<List<PessoaJson>>() {}
             );
 
-            for (PessoaJson p : mockPessoas) {
-                if (p.getDocumento().equals(documento)) {
-                    return Optional.of(transformarParaEntidade(p));
+            for (PessoaJson pessoa : mockPessoas) {
+                if (pessoa.getDocumento().equals(documento)) {
+                    return Optional.of(transformarParaEntidade(pessoa));
                 }
             }
         } catch (Exception e) {
@@ -54,6 +54,8 @@ public class MockService {
             Restricao restricao = new Restricao();
             restricao.setDescricao(r.getDescricao());
             restricao.setDataInclusao(LocalDate.parse(r.getDataInclusao()));
+            restricao.setDataExclusao(LocalDate.parse(r.getDataExclusao()));
+            restricao.setEmAberto(r.isEmAberto());
             restricao.setPessoa(pessoa);
             return restricao;
         }).toList();

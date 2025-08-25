@@ -13,4 +13,7 @@ public class RestricaoDTO {
 
     private LocalDate dataInclusao;
 
+    private LocalDate dataExclusao;
+
+    private boolean emAberto;
 }
