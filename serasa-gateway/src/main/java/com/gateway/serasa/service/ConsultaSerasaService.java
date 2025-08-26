@@ -30,8 +30,11 @@ public class ConsultaSerasaService {
         }
 
         Pessoa pessoa = pessoaRepository.findByDocumento(documento)
-                .orElseGet(() -> mockService.buscarPorDocumento(documento)
-                        .orElseThrow(() -> new RuntimeException("Documento não encontrado no Serasa: " + documento)));
+                .orElseGet(() -> {
+                    Pessoa pessoaMock = mockService.buscarPorDocumento(documento)
+                            .orElseThrow(() -> new RuntimeException("Documento não encontrado no Serasa: " + documento));
+                    return pessoaRepository.save(pessoaMock);
+                });
 
         filtrarDividasEmAberto(pessoa);
         filtrarRestricoesEmAberto(pessoa);
