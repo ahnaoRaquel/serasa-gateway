@@ -5,8 +5,8 @@
     "tipo": "FISICA",
     "score": { "pontos": 650 },
     "restricoes": [
-      { "descricao": "Cheque sem fundo", "dataInclusao": "2025-01-01" },
-      { "descricao": "Empréstimo não pago", "dataInclusao": "2025-02-10" }
+      { "descricao": "Cheque sem fundo", "dataInclusao": "2025-01-01", "dataExclusao": null, "emAberto": true },
+      { "descricao": "Empréstimo não pago", "dataInclusao": "2025-02-10", "dataExclusao": null, "emAberto": true }
     ],
     "dividas": [
       { "credor": "Banco XYZ", "valor": 5000.0, "emAberto": true },
@@ -14,31 +14,31 @@
     ]
   },
   {
-    "documento": "11222333000181",
+    "documento": "84632736000172",
     "nome": "Empresa XPTO LTDA",
     "tipo": "JURIDICA",
     "score": { "pontos": 720 },
     "restricoes": [
-      { "descricao": "Imposto atrasado", "dataInclusao": "2025-03-01" }
+      { "descricao": "Imposto atrasado", "dataInclusao": "2025-03-01", "dataExclusao": null, "emAberto": true }
     ],
     "dividas": [
       { "credor": "Receita Federal", "valor": 30000.0, "emAberto": true }
     ]
   },
   {
-    "documento": "98765432100",
+    "documento": "82343415021",
     "nome": "Maria Oliveira",
     "tipo": "FISICA",
     "score": { "pontos": 580 },
     "restricoes": [
-      { "descricao": "Conta em atraso", "dataInclusao": "2025-01-20" }
+      { "descricao": "Conta em atraso", "dataInclusao": "2025-01-20", "dataExclusao": null, "emAberto": true }
     ],
     "dividas": [
       { "credor": "Banco ABC", "valor": 2500.0, "emAberto": true }
     ]
   },
   {
-    "documento": "22334455000177",
+    "documento": "78285437000106",
     "nome": "Construtora Alfa LTDA",
     "tipo": "JURIDICA",
     "score": { "pontos": 680 },
@@ -48,27 +48,27 @@
     ]
   },
   {
-    "documento": "12345678909",
+    "documento": "91368594000",
     "nome": "João da Silva",
-    "tipo": "PF",
-    "score": 750,
+    "tipo": "FISICA",
+    "score": { "pontos": 750 },
     "restricoes": [],
     "dividas": []
   },
   {
-    "documento": "11122233396",
+    "documento": "04318231038",
     "nome": "Carlos Pereira",
     "tipo": "FISICA",
     "score": { "pontos": 600 },
     "restricoes": [
-      { "descricao": "Empréstimo atrasado", "dataInclusao": "2025-03-10" }
+      { "descricao": "Empréstimo atrasado", "dataInclusao": "2025-03-10", "dataExclusao": "2025-08-10", "emAberto": false }
     ],
     "dividas": [
       { "credor": "Loja XYZ", "valor": 800.0, "emAberto": true }
     ]
   },
   {
-    "documento": "33445566000170",
+    "documento": "12174371000179",
     "nome": "Tech Solutions LTDA",
     "tipo": "JURIDICA",
     "score": { "pontos": 750 },
@@ -78,7 +78,7 @@
     ]
   },
   {
-    "documento": "55566677735",
+    "documento": "16813251015",
     "nome": "Ana Souza",
     "tipo": "FISICA",
     "score": { "pontos": 700 },
@@ -86,31 +86,31 @@
     "dividas": []
   },
   {
-    "documento": "44556677000163",
+    "documento": "03560188000110",
     "nome": "Indústria Beta LTDA",
     "tipo": "JURIDICA",
     "score": { "pontos": 690 },
     "restricoes": [
-      { "descricao": "Débito em cartório", "dataInclusao": "2025-02-28" }
+      { "descricao": "Débito em cartório", "dataInclusao": "2025-02-28", "dataExclusao": null, "emAberto": true }
     ],
     "dividas": [
       { "credor": "Banco DEF", "valor": 45000.0, "emAberto": true }
     ]
   },
   {
-    "documento": "66677788848",
+    "documento": "71179977025",
     "nome": "Roberto Lima",
     "tipo": "FISICA",
     "score": { "pontos": 620 },
     "restricoes": [
-      { "descricao": "Cartão de crédito em atraso", "dataInclusao": "2025-04-01" }
+      { "descricao": "Cartão de crédito em atraso", "dataInclusao": "2025-04-01", "dataExclusao": null, "emAberto": true }
     ],
     "dividas": [
       { "credor": "Banco GHI", "valor": 3200.0, "emAberto": true }
     ]
   },
   {
-    "documento": "55667788000152",
+    "documento": "61071001000111",
     "nome": "Comércio Delta LTDA",
     "tipo": "JURIDICA",
     "score": { "pontos": 710 },
