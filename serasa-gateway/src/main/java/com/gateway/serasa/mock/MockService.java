@@ -54,7 +54,7 @@ public class MockService {
             Restricao restricao = new Restricao();
             restricao.setDescricao(r.getDescricao());
             restricao.setDataInclusao(LocalDate.parse(r.getDataInclusao()));
-            restricao.setDataExclusao(LocalDate.parse(r.getDataExclusao()));
+            restricao.setDataExclusao(r.getDataExclusao() != null ? LocalDate.parse(r.getDataExclusao()) : null);
             restricao.setEmAberto(r.isEmAberto());
             restricao.setPessoa(pessoa);
             return restricao;
