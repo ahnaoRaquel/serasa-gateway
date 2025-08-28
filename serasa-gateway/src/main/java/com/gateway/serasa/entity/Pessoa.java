@@ -35,4 +35,6 @@ public class Pessoa {
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Divida> dividas;
 
+    private boolean ativo = true;
+
 }

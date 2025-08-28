@@ -5,6 +5,9 @@ import com.gateway.serasa.dto.PessoaResponseDTO;
 import com.gateway.serasa.entity.Divida;
 import com.gateway.serasa.entity.Pessoa;
 import com.gateway.serasa.entity.Restricao;
+import com.gateway.serasa.exception.DocumentoInvalidoException;
+import com.gateway.serasa.exception.PessoaInativaException;
+import com.gateway.serasa.exception.PessoaNaoEncontradaException;
 import com.gateway.serasa.mock.MockService;
 import com.gateway.serasa.repository.PessoaRepository;
 import com.gateway.serasa.util.ValidadorDocumento;
@@ -26,15 +29,17 @@ public class ConsultaSerasaService {
 
     public PessoaResponseDTO consultarPorDocumento(String documento) {
         if (!ValidadorDocumento.validarDocumento(documento)) {
-            throw new IllegalArgumentException("Documento inválido: " + documento);
+            throw new DocumentoInvalidoException(documento);
         }
 
         Pessoa pessoa = pessoaRepository.findByDocumento(documento)
-                .orElseGet(() -> {
-                    Pessoa pessoaMock = mockService.buscarPorDocumento(documento)
-                            .orElseThrow(() -> new RuntimeException("Documento não encontrado no Serasa: " + documento));
-                    return pessoaRepository.save(pessoaMock);
-                });
+                .orElseGet(() -> mockService.buscarPorDocumento(documento)
+                        .map(pessoaRepository::save)
+                        .orElseThrow(() -> new PessoaNaoEncontradaException(documento)));
+
+        if (!pessoa.isAtivo()) {
+            throw new PessoaInativaException(documento);
+        }
 
         filtrarDividasEmAberto(pessoa);
         filtrarRestricoesEmAberto(pessoa);
@@ -62,7 +67,7 @@ public class ConsultaSerasaService {
                 .toList();
 
         if (!documentosInvalidos.isEmpty()) {
-            throw new IllegalArgumentException("Documentos inválidos no lote: " + documentosInvalidos);
+            throw new DocumentoInvalidoException(String.join(", ", documentosInvalidos));
         }
 
         return documentos.stream()
