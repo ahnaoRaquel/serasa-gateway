@@ -13,6 +13,7 @@ import com.gateway.serasa.repository.PessoaRepository;
 import com.gateway.serasa.util.ValidadorDocumento;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -72,6 +73,20 @@ public class ConsultaSerasaService {
 
         return documentos.stream()
                 .map(this::consultarPorDocumento)
+                .toList();
+    }
+
+    public List<PessoaResponseDTO> buscarPorNome(String nome) {
+        return pessoaRepository.findByNomeContainingIgnoreCaseAndAtivoTrue(nome)
+                .stream()
+                .map(PessoaMapper::toDTO)
+                .toList();
+    }
+
+    public List<PessoaResponseDTO> buscarPorRestricoesEntreDatas(LocalDate inicio, LocalDate fim) {
+        return pessoaRepository.findDistinctByRestricoesDataInclusaoBetween(inicio, fim)
+                .stream()
+                .map(PessoaMapper::toDTO)
                 .toList();
     }
 }

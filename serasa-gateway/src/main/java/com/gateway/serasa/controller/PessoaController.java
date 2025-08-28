@@ -5,8 +5,6 @@ import com.gateway.serasa.service.PessoaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/documento")
 public class PessoaController {
