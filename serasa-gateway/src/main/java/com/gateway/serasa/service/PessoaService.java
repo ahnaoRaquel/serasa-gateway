@@ -1,25 +1,25 @@
 package com.gateway.serasa.service;
 
+import com.gateway.serasa.dto.DocumentoValidatorResponseDTO;
 import com.gateway.serasa.dto.PessoaMapper;
 import com.gateway.serasa.dto.PessoaResponseDTO;
 import com.gateway.serasa.entity.Pessoa;
 import com.gateway.serasa.exception.DocumentoInvalidoException;
 import com.gateway.serasa.exception.PessoaNaoEncontradaException;
 import com.gateway.serasa.repository.PessoaRepository;
-import com.gateway.serasa.util.ValidadorDocumento;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
-
-    public PessoaService(PessoaRepository pessoaRepository) {
-        this.pessoaRepository = pessoaRepository;
-    }
+    private final DocumentoValidationService validationService;
 
     public PessoaResponseDTO ativarPessoa(String documento) {
-        if (!ValidadorDocumento.validarDocumento(documento)) {
+        DocumentoValidatorResponseDTO validatorResponse = validationService.validarDocumento(documento);
+        if (!validatorResponse.isValid()) {
             throw new DocumentoInvalidoException(documento);
         }
 
@@ -37,7 +37,8 @@ public class PessoaService {
     }
 
     public PessoaResponseDTO desativarPessoa(String documento) {
-        if (!ValidadorDocumento.validarDocumento(documento)) {
+        DocumentoValidatorResponseDTO validatorResponse = validationService.validarDocumento(documento);
+        if (!validatorResponse.isValid()) {
             throw new DocumentoInvalidoException(documento);
         }
 

@@ -100,7 +100,7 @@ class ConsultaHistoricoServiceTest {
         List<ConsultaHistoricoResponseDTO> resultados = historicoService.listarTodasConsultas();
 
         assertEquals(2, resultados.size());
-        assertEquals("12345678900", resultados.get(0).getDocumento());
+        assertEquals("02205379259", resultados.get(0).getDocumento());
         assertEquals("Maria", resultados.get(1).getNomePessoa());
     }
 

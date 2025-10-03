@@ -1,5 +1,6 @@
 package com.gateway.serasa.service;
 
+import com.gateway.serasa.dto.DocumentoValidatorResponseDTO;
 import com.gateway.serasa.dto.PessoaMapper;
 import com.gateway.serasa.dto.PessoaResponseDTO;
 import com.gateway.serasa.entity.ConsultaHistorico;
@@ -12,12 +13,12 @@ import com.gateway.serasa.exception.PessoaNaoEncontradaException;
 import com.gateway.serasa.mock.MockService;
 import com.gateway.serasa.repository.ConsultaHistoricoRepository;
 import com.gateway.serasa.repository.PessoaRepository;
-import com.gateway.serasa.util.ValidadorDocumento;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,9 +28,11 @@ public class ConsultaSerasaService {
     private final PessoaRepository pessoaRepository;
     private final MockService mockService;
     private final ConsultaHistoricoRepository historicoRepository;
+    private final DocumentoValidationService validationService;
 
     public PessoaResponseDTO consultarPorDocumento(String documento) {
-        if (!ValidadorDocumento.validarDocumento(documento)) {
+        DocumentoValidatorResponseDTO validatorResponse = validationService.validarDocumento(documento);
+        if (!validatorResponse.isValid()) {
             throw new DocumentoInvalidoException(documento);
         }
 
@@ -71,16 +74,37 @@ public class ConsultaSerasaService {
     }
 
     public List<PessoaResponseDTO> consultarPorLote(List<String> documentos) {
-        List<String> documentosInvalidos = documentos.stream()
-                .filter(doc -> !ValidadorDocumento.validarDocumento(doc))
-                .toList();
+        List<String> documentosInvalidos = new ArrayList<>();
+        List<Pessoa> documentosValidos = new ArrayList<>();
+
+        for (String doc : documentos) {
+            DocumentoValidatorResponseDTO resultado = validationService.validarDocumento(doc);
+
+            if (!resultado.isValid()) {
+                documentosInvalidos.add(doc);
+            } else {
+                Pessoa pessoa = pessoaRepository.findByDocumento(doc)
+                        .orElseGet(() -> mockService.buscarPorDocumento(doc)
+                                .map(pessoaRepository::save)
+                                .orElseThrow(() -> new PessoaNaoEncontradaException(doc)));
+
+                if (!pessoa.isAtivo()) {
+                    throw new PessoaInativaException(doc);
+                }
+
+                filtrarDividasEmAberto(pessoa);
+                filtrarRestricoesEmAberto(pessoa);
+
+                documentosValidos.add(pessoa);
+            }
+        }
 
         if (!documentosInvalidos.isEmpty()) {
             throw new DocumentoInvalidoException(String.join(", ", documentosInvalidos));
         }
 
-        return documentos.stream()
-                .map(this::consultarPorDocumento)
+        return documentosValidos.stream()
+                .map(PessoaMapper::toDTO)
                 .toList();
     }
 
