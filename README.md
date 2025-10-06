@@ -2,7 +2,7 @@
 
 ##  Descrição do Projeto
 
-O **Gateway Serasa** é uma aplicação Java com **Spring Boot** que simula um sistema de **consulta de dados de crédito** (inspirado no Serasa).  
+O **Gateway Serasa** é uma aplicação Java com **Spring Boot** que simula um sistema de **consulta de dados de crédito**.  
 Ele integra dados **mockados** (para simulação) com **persistência em banco de dados**, permitindo:
 
 - Consultar informações de **pessoas físicas** e **jurídicas**.
@@ -39,33 +39,52 @@ Ele integra dados **mockados** (para simulação) com **persistência em banco d
 
 ---
 
-## Principais Classes
+## 🏗️ Arquitetura do Projeto
 
-### Modelos (Entities)
-- **`Pessoa`** – Representa a pessoa física ou jurídica, com campos como `documento`, `nome`, `ativo`, `dividas`, `restricoes`.
-- **`Restricao`** – Guarda informações sobre restrições financeiras (ex.: cheque sem fundo).
-- **`Divida`** – Registra dívidas da pessoa.
-- **`ConsultaHistorico`** – **Nova entidade** que armazena cada consulta feita no sistema.
+A arquitetura foi planejada para **manter a separação de responsabilidades, reuso e escalabilidade**. O projeto está dividido nos seguintes módulos:
 
-### Serviços
-- **`ConsultaSerasaService`**
-  - Responsável pela lógica de consultas de documentos.
-  - Integra com **MockService** caso pessoa não exista no banco.
-  - **Novo:** registra automaticamente cada consulta no `ConsultaHistorico`.
-- **`PessoaService`**
-  - Lógica para ativar e desativar pessoas.
-- **`ConsultaHistoricoService`**
-  - Contém as regras para salvar e listar o histórico de consultas.
-- **`MockService`**
-  - Fornece dados simulados para testes quando a pessoa não existe no banco.
+### 📦 1. `common-domain`
+- **Responsabilidade:** contém as **entidades JPA** e **enums** usados em todo o sistema.  
+- **Decisão:** manter as entidades **livres de anotações de API e validações externas**, preservando a pureza do modelo de domínio.  
+- **Benefício:** facilita o reuso em outros módulos sem dependências desnecessárias.
 
 ---
 
-## Funcionalidade Escolhida: **Histórico de Consultas**
+### 🌐 2. `external-api-client`
+- **Responsabilidade:** concentra **toda a comunicação com APIs externas**, usando **OpenFeign**.
+- **Decisão:** manter os **DTOs externos** e os **Feign Clients** separados para evitar acoplamento da aplicação a serviços de terceiros.
+- **Benefício:** se a API do Serasa mudar ou for substituída, basta atualizar este módulo.
 
-Escolhemos implementar o **Histórico de Consultas** pois é uma funcionalidade **essencial para sistemas de crédito**:  
-- Permite rastrear **quando, quem e quantas vezes** uma pessoa foi consultada.
-- É relevante para **auditorias, relatórios** e segurança da informação.
-- Se integra de forma natural ao fluxo já existente de consultas no `ConsultaSerasaService`.
+---
 
+### 🚀 3. `main-application`
+- **Responsabilidade:** 
+  - Camada de **serviços**, **repositórios** (Spring Data JPA), **controladores REST** e **configuração de segurança**.
+  - Contém os **DTOs da própria API** (Request e Response).
+- **Decisão:** centralizar aqui a lógica de negócios e manter as camadas bem definidas.
+- **Benefício:** simplifica manutenção e testes.
 
+---
+
+## 🔐 Segurança
+
+A segurança foi implementada com **Spring Security 6** utilizando:
+
+1. **Autenticação HTTP Basic**
+   - Usuários e roles são **gerenciados em memória** (ideal para ambiente de desenvolvimento).
+   - Senhas codificadas com **BCryptPasswordEncoder**.
+
+2. **Autorização baseada em URL/Request Matching**
+   - Endpoints protegidos por roles:
+     - `ADMIN`: pode ativar/desativar pessoas.
+     - `ADMIN` e `USER`: podem consultar informações.
+   - Todas as outras requisições exigem autenticação.
+
+3. **Segurança por padrão**
+   - Nenhum endpoint público é exposto sem autenticação.
+
+4. **Mensagens customizadas**
+   - Resposta **401 Unauthorized** para usuários não autenticados.
+   - Resposta **403 Forbidden** com mensagem em JSON para usuários autenticados sem permissão.
+
+---
